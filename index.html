@@ -1,39 +1,75 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="无尽像素服务器 Bug 追踪器 —— 基于 GitHub Issues 的公开漏洞看板">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
-    <title>无尽像素服务器Bug追踪器</title>
+    <title>无尽像素服务器 Bug 追踪器</title>
 </head>
 
 <body>
     <nav>
-        <h3>EndlessPixel Bug Tracker</h3>
+        <div class="nav-left">
+            <button class="menu-toggle" id="menuToggle" aria-label="打开漏洞列表">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div class="nav-brand">
+                <h3>EndlessPixel</h3>
+                <span class="nav-sub">Bug Tracker</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <a class="report-btn"
+                href="https://github.com/EndlessPixel-Studio/EndlessPixel-Bug-Tracker/issues/new/choose"
+                target="_blank" rel="noopener">
+                <span class="gh-logo" role="img" aria-label="GitHub"></span>
+                <span class="label">报告 Bug</span>
+            </a>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换深色 / 浅色主题" title="切换主题">
+                <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+            </button>
+        </div>
     </nav>
 
-    <div class="container">
-        <aside class="sidebar">
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="filter-title">
-                    <h4>漏洞列表</h4>
-                    <a class="report-btn"
-                        href="https://github.com/EndlessPixel-Studio/EndlessPixel-Bug-Tracker/issues/new/choose"
-                        target="_blank" rel="noopener">
-                        前往报告 Bug
-                    </a>
+                    <h4>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="3.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="3.5" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>
+                        漏洞列表
+                    </h4>
+                    <span class="bug-count" id="bugCount"></span>
+                </div>
+                <div class="search-box">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="search" id="searchInput" placeholder="在当页中搜索…" autocomplete="off">
                 </div>
             </div>
-
             <div id="bugSidebarList" class="sidebar-list"></div>
             <div id="paginator" class="paginator"></div>
+            <footer class="sidebar-footer">
+                <span class="gh-text" role="img" aria-label="GitHub"></span>
+                <span>数据来源于 GitHub Issues</span>
+            </footer>
         </aside>
 
-        <main class="content">
+        <div class="scrim" id="scrim"></div>
+
+        <main class="content" id="content">
+            <button class="back-btn" id="backBtn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                返回列表
+            </button>
             <div id="bugDetailView" class="detail-view">
-                <div class="placeholder">请选择一个Bug查看详情</div>
+                <div class="placeholder">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    <p>请选择一个 Bug 查看详情</p>
+                </div>
             </div>
         </main>
     </div>

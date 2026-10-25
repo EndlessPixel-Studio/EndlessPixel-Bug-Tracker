@@ -19,6 +19,7 @@ let BUGS = [];
 let currentPage = 1;
 let currentSelectedIndex = null;
 let hasNextPage = false;
+let searchTerm = '';
 
 // ====================== URL 工具 ======================
 function getQuery(key) {
@@ -31,6 +32,37 @@ function setQuery(key, value) {
     if (value === null || value === '') params.delete(key);
     else params.set(key, value);
     history.replaceState({}, '', '?' + params.toString());
+}
+
+// ====================== 主题 ======================
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
+function initTheme() {
+    let theme = null;
+    try { theme = localStorage.getItem('ep_theme'); } catch { /* ignore */ }
+    if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    applyTheme(theme);
+}
+
+function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('ep_theme', next); } catch { /* ignore */ }
+}
+
+// ====================== 移动端抽屉 ======================
+function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('scrim').classList.add('show');
+}
+
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('scrim').classList.remove('show');
 }
 
 // ====================== 缓存 ======================
@@ -157,7 +189,19 @@ function renderDetailSkeleton() {
 function renderSidebar() {
     const listEl = document.getElementById('bugSidebarList');
     const paginatorEl = document.getElementById('paginator');
+    const countEl = document.getElementById('bugCount');
     listEl.innerHTML = '';
+
+    document.getElementById('searchInput').value = searchTerm;
+
+    const term = searchTerm.trim().toLowerCase();
+    const filtered = term
+        ? BUGS.filter(b => b.title.toLowerCase().includes(term) || b.no.toLowerCase().includes(term))
+        : BUGS;
+
+    if (countEl) {
+        countEl.textContent = term ? `${filtered.length}/${BUGS.length}` : `${BUGS.length}`;
+    }
 
     if (!BUGS.length) {
         listEl.innerHTML = `<div class="placeholder">暂无Bug</div>`;
@@ -165,15 +209,25 @@ function renderSidebar() {
         return;
     }
 
-    BUGS.forEach((bug, offset) => {
-        const realIndex = (currentPage - 1) * PAGE_SIZE + offset;
+    if (!filtered.length) {
+        listEl.innerHTML = `<div class="placeholder">没有匹配的漏洞</div>`;
+        paginatorEl.innerHTML = `
+            <button ${currentPage <= 1 ? 'disabled' : ''} onclick="goPage(${currentPage - 1})">上一页</button>
+            <span>第 ${currentPage} 页</span>
+            <button ${hasNextPage ? '' : 'disabled'} onclick="goPage(${currentPage + 1})">下一页</button>
+        `;
+        return;
+    }
+
+    filtered.forEach((bug) => {
+        const realIndex = BUGS.indexOf(bug);
         const item = document.createElement('div');
         item.className = 'sidebar-item';
         if (realIndex === currentSelectedIndex) item.classList.add('active');
 
         item.innerHTML = `
-            <div class="item-id">${bug.no} · <span style="color: #535353;">${bug.report_player}</span></div>
-            <div class="item-title">${bug.title} · <span class="status-tag status-${bug.status}">${bug.status}</span></div>
+            <div class="item-id"><span>${bug.no}</span><span class="item-player">${bug.report_player}</span></div>
+            <div class="item-title"><span>${bug.title}</span><span class="status-tag status-${bug.status}">${bug.status}</span></div>
         `;
 
         item.addEventListener('click', () => selectBug(realIndex));
@@ -197,27 +251,28 @@ function renderDetail(index) {
 
     const bug = BUGS[index];
     detailEl.innerHTML = `
-        <div class="detail-header">
-            <div class="detail-id">EndlessPixel / ${bug.no}</div>
-            <h1 class="detail-title">${bug.title}</h1>
-        </div>
-        <div class="detail-section">
-            <div class="info-grid">
-                <div class="info-item"><span class="info-label">类型</span><span class="info-value">${bug.type}</span></div>
-                <div class="info-item"><span class="info-label">状态</span><span class="info-value"><span class="status-tag status-${bug.status}">${bug.status}</span></span></div>
-                <div class="info-item"><span class="info-label">报告玩家</span><span class="info-value">${bug.report_player}</span></div>
-                <br>
-                <div class="info-item"><span class="info-label">报告时间</span><span class="info-value">${bug.date}</span></div>
-                ${bug.fixed_date ? `<div class="info-item"><span class="info-label">修复时间</span><span class="info-value">${bug.fixed_date}</span></div>` : ''}
+        <div class="detail-card">
+            <div class="detail-header">
+                <div class="detail-id">EndlessPixel / ${bug.no}</div>
+                <h1 class="detail-title">${bug.title}</h1>
             </div>
-        </div>
-        <div class="detail-section">
-            <div class="section-title">问题描述</div>
-            <div class="detail-desc markdown-body">${renderMarkdown(bug.desc)}</div>
-        </div>
-        <div class="detail-section">
-            <div class="section-title">评论</div>
-            <div id="commentSection"><div class="detail-desc">加载中…</div></div>
+            <div class="detail-section">
+                <div class="info-grid">
+                    <div class="info-item"><span class="info-label">类型</span><span class="info-value">${bug.type}</span></div>
+                    <div class="info-item"><span class="info-label">状态</span><span class="info-value"><span class="status-tag status-${bug.status}">${bug.status}</span></span></div>
+                    <div class="info-item"><span class="info-label">报告玩家</span><span class="info-value">${bug.report_player}</span></div>
+                    <div class="info-item"><span class="info-label">报告时间</span><span class="info-value">${bug.date}</span></div>
+                    ${bug.fixed_date ? `<div class="info-item"><span class="info-label">修复时间</span><span class="info-value">${bug.fixed_date}</span></div>` : ''}
+                </div>
+            </div>
+            <div class="detail-section">
+                <div class="section-title">问题描述</div>
+                <div class="detail-desc markdown-body">${renderMarkdown(bug.desc)}</div>
+            </div>
+            <div class="detail-section">
+                <div class="section-title">评论</div>
+                <div id="commentSection"><div class="detail-desc">加载中…</div></div>
+            </div>
         </div>
     `;
 
@@ -255,6 +310,7 @@ function selectBug(realIndex) {
     if (bug) setQuery('bug', bug.number);
     renderSidebar();
     renderDetail(realIndex);
+    closeSidebar();
 }
 
 // ====================== 翻页 ======================
@@ -264,6 +320,7 @@ async function goPage(page) {
     setQuery('page', currentPage);
     currentSelectedIndex = null;
     setQuery('bug', null);
+    searchTerm = '';
     await loadBugs();
 }
 
@@ -306,4 +363,31 @@ async function loadFromUrl() {
     }
 }
 
-window.addEventListener('DOMContentLoaded', loadFromUrl);
+// ====================== UI 控件初始化 ======================
+function initControls() {
+    const themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+
+    const menuBtn = document.getElementById('menuToggle');
+    if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+
+    const scrim = document.getElementById('scrim');
+    if (scrim) scrim.addEventListener('click', closeSidebar);
+
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) backBtn.addEventListener('click', openSidebar);
+
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderSidebar();
+        });
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initControls();
+    loadFromUrl();
+});
