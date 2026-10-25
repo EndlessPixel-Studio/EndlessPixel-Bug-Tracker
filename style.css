@@ -19,7 +19,7 @@
     --text-primary: #1f2328;
     --text-secondary: #59636e;
     --text-muted: #8c959f;
-    --icon-muted: #8c959f; /* 图标用：深色模式下自动变亮 */
+    --icon-muted: #59636e; /* 图标用：跟随主题动态匹配（浅色深、深色浅） */
     --accent: #0969da;
     --accent-hover: #0860ca;
     --accent-soft: #ddf4ff;
@@ -47,7 +47,7 @@
     --text-primary: #e6edf3;
     --text-secondary: #9198a1;
     --text-muted: #6e7681;
-    --icon-muted: #9198a1; /* 深色模式下图标更亮，避免“深色图标” */
+    --icon-muted: #9198a1; /* 深色模式下图标更亮，动态匹配 */
     --accent: #4493f8;
     --accent-hover: #58a6ff;
     --accent-soft: #1f6feb33;
@@ -208,9 +208,8 @@ nav {
     width: 16px;
     height: 16px;
     flex: 0 0 auto;
-    background-color: #fff; /* 按钮恒为绿色，logo 恒为白色 */
-    -webkit-mask: url(assets/github-logo.svg) no-repeat center / contain;
-    mask: url(assets/github-logo.svg) no-repeat center / contain;
+    color: #fff; /* 按钮恒为绿色，logo 用 currentColor 恒为白色 */
+    display: inline-block;
 }
 
 /* ====================== 布局 ====================== */
@@ -371,8 +370,11 @@ nav {
 }
 .sidebar-footer .gh-text {
     height: 14px;
-    width: auto;
+    width: 45.5px; /* 78:24 比例 */
     opacity: 0.85;
+    background-color: var(--icon-muted); /* 跟随主题：深色更亮、浅色更暗 */
+    -webkit-mask: url(assets/github-text.svg) no-repeat center / contain;
+    mask: url(assets/github-text.svg) no-repeat center / contain;
 }
 
 /* ====================== 内容区 ====================== */
