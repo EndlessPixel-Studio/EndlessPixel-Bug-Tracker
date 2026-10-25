@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <title>无尽像素服务器Bug追踪器</title>
 </head>
+
 <body>
     <nav>
         <h3>EndlessPixel Bug Tracker</h3>
@@ -17,6 +19,11 @@
             <div class="sidebar-header">
                 <div class="filter-title">
                     <h4>漏洞列表</h4>
+                    <a class="report-btn"
+                        href="https://github.com/EndlessPixel-Studio/EndlessPixel-Bug-Tracker/issues/new/choose"
+                        target="_blank" rel="noopener">
+                        前往报告 Bug
+                    </a>
                 </div>
             </div>
 
@@ -31,7 +38,9 @@
         </main>
     </div>
 
-    <script src="bugs.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
