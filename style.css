@@ -1,58 +1,58 @@
 /* ============================================================
-   EndlessPixel Bug Tracker —— 设计系统 & 全端响应式样式
+   EndlessPixel Bug Tracker —— 样式
+   设计基调：GitHub 中性灰 + 品牌绿；区域用色块区分，不用边框；
+   全站统一 6px 圆角；不用蓝紫色与渐变。
    ============================================================ */
 
 :root {
     --nav-h: 56px;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
 
-    /* 浅色主题 */
-    --bg-app: #f6f8fa;
-    --bg-surface: #ffffff;
-    --bg-subtle: #f6f8fa;
-    --bg-hover: #f3f4f6;
-    --bg-active: #ddf4ff;
-    --border: #e1e4e8;
-    --border-strong: #d0d7de;
+    /* 圆角：全站统一 6px */
+    --radius-sm: 6px;
+    --radius-md: 6px;
+    --radius-lg: 6px;
+
+    /* 浅色主题：灰色画布 + 白色面板，靠深浅区分层级 */
+    --bg-app: #f6f8fa;      /* 页面 / 内容画布 */
+    --bg-surface: #ffffff;  /* 导航、侧栏、卡片、输入控件 */
+    --bg-subtle: #f6f8fa;   /* 面板内的次级色块 */
+    --bg-hover: #eef1f4;
+    --bg-active: #dafbe1;   /* 选中：品牌绿浅底 */
+    --border: #e4e8ec;      /* 仅保留给表格等内容元素 */
     --text-primary: #1f2328;
     --text-secondary: #59636e;
     --text-muted: #8c959f;
-    --icon-muted: #59636e; /* 图标用：跟随主题动态匹配（浅色深、深色浅） */
-    --accent: #0969da;
-    --accent-hover: #0860ca;
-    --accent-soft: #ddf4ff;
-    --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.06);
-    --shadow-md: 0 8px 24px rgba(31, 35, 40, 0.12);
+    --icon-muted: #59636e;  /* 图标随主题动态匹配 */
+    --accent: #1a7f37;        /* 品牌绿（文字 / 链接） */
+    --accent-strong: #1f883d; /* 品牌绿（按钮） */
+    --accent-hover: #2da44e;
+    --accent-soft: rgba(31, 136, 61, 0.15);
     --shadow-drawer: 4px 0 24px rgba(31, 35, 40, 0.15);
 
-    /* 状态色 */
+    /* 状态色（取自 GitHub，去掉蓝紫） */
     --status-green: #1a7f37;
     --status-red: #cf222e;
     --status-yellow: #9a6700;
     --status-gray: #6e7781;
-    --status-orange: #e67e22;
-    --status-purple: #7b1fa2;
+    --status-orange: #bc4c00;
+    --status-slate: #57606a;
 }
 
 [data-theme="dark"] {
     --bg-app: #0d1117;
     --bg-surface: #161b22;
-    --bg-subtle: #161b22;
+    --bg-subtle: #0d1117;
     --bg-hover: #21262d;
-    --bg-active: #1f6feb33;
+    --bg-active: rgba(46, 160, 67, 0.15);
     --border: #30363d;
-    --border-strong: #3d444d;
     --text-primary: #e6edf3;
     --text-secondary: #9198a1;
-    --text-muted: #6e7681;
-    --icon-muted: #9198a1; /* 深色模式下图标更亮，动态匹配 */
-    --accent: #4493f8;
-    --accent-hover: #58a6ff;
-    --accent-soft: #1f6feb33;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.5);
+    --text-muted: #8b949e;
+    --icon-muted: #9198a1;
+    --accent: #3fb950;
+    --accent-strong: #238636;
+    --accent-hover: #2ea043;
+    --accent-soft: rgba(46, 160, 67, 0.25);
     --shadow-drawer: 4px 0 24px rgba(0, 0, 0, 0.6);
 
     --status-green: #3fb950;
@@ -60,7 +60,7 @@
     --status-yellow: #d29922;
     --status-gray: #8b949e;
     --status-orange: #f0883e;
-    --status-purple: #c084fc;
+    --status-slate: #b0bac4;
 }
 
 * {
@@ -95,8 +95,6 @@ nav {
     justify-content: space-between;
     padding: 0 20px;
     background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
 }
 
 .nav-left {
@@ -108,20 +106,15 @@ nav {
 
 .nav-brand {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
     min-width: 0;
 }
 
-.nav-brand h3 {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-    background: linear-gradient(135deg, var(--accent), #8b5cf6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    white-space: nowrap;
+.brand-logo {
+    height: 24px;
+    width: auto;
+    display: block;
 }
 
 .nav-sub {
@@ -137,36 +130,23 @@ nav {
     gap: 10px;
 }
 
-.menu-toggle {
-    display: none;
-    width: 36px;
-    height: 36px;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border);
-    background: var(--bg-surface);
-    color: var(--text-primary);
-    border-radius: var(--radius-sm);
-    font-size: 18px;
-    cursor: pointer;
-    line-height: 1;
-}
-.menu-toggle:hover { background: var(--bg-hover); }
-
+/* 导航上的小按钮：灰底色块，不用描边 */
+.menu-toggle,
 .theme-toggle {
-    width: 36px;
-    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--border);
-    background: var(--bg-surface);
+    width: 36px;
+    height: 36px;
+    background: var(--bg-subtle);
     color: var(--text-secondary);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 16px;
-    transition: background 0.15s, color 0.15s, transform 0.2s;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
 }
+.menu-toggle { display: none; font-size: 18px; }
+.menu-toggle:hover,
 .theme-toggle:hover { background: var(--bg-hover); color: var(--text-primary); }
 .theme-toggle:active { transform: scale(0.92); }
 
@@ -186,6 +166,7 @@ nav {
 [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 [data-theme="dark"] .theme-toggle .icon-sun { display: inline-block; }
 
+/* 报告 Bug：纯色品牌绿按钮 */
 .report-btn {
     display: inline-flex;
     align-items: center;
@@ -194,14 +175,13 @@ nav {
     font-size: 13px;
     font-weight: 600;
     color: #fff;
-    background: linear-gradient(135deg, #1f883d, #1a7f37);
-    border: 1px solid rgba(31, 136, 61, 0.2);
+    background: var(--accent-strong);
     border-radius: var(--radius-sm);
     text-decoration: none;
     white-space: nowrap;
-    transition: filter 0.15s, transform 0.1s;
+    transition: background 0.15s, transform 0.1s;
 }
-.report-btn:hover { filter: brightness(1.08); text-decoration: none; }
+.report-btn:hover { background: var(--accent-hover); text-decoration: none; }
 .report-btn:active { transform: translateY(1px); }
 
 .report-btn .gh-logo {
@@ -220,19 +200,19 @@ nav {
 }
 
 /* ====================== 侧边栏 ====================== */
+/* 白色面板浮在灰色画布上，与内容区的分界靠颜色，不画边框 */
 .sidebar {
     width: 340px;
     min-width: 340px;
     display: flex;
     flex-direction: column;
     background: var(--bg-surface);
-    border-right: 1px solid var(--border);
     z-index: 20;
 }
 
 .sidebar-header {
     padding: 14px 16px 12px;
-    border-bottom: 1px solid var(--border);
+    background: var(--bg-subtle);
 }
 
 .filter-title {
@@ -249,10 +229,9 @@ nav {
 
 .bug-count {
     font-size: 12px;
-    color: var(--text-muted);
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 999px;
+    color: var(--text-secondary);
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
     padding: 2px 9px;
 }
 
@@ -265,15 +244,14 @@ nav {
     padding: 8px 12px 8px 32px;
     font-size: 13px;
     color: var(--text-primary);
-    background: var(--bg-app);
-    border: 1px solid var(--border-strong);
+    background: var(--bg-surface);
+    border: none;
     border-radius: var(--radius-sm);
     outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: box-shadow 0.15s;
 }
 .search-box input::placeholder { color: var(--text-muted); }
 .search-box input:focus {
-    border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .search-box .icon {
@@ -295,15 +273,13 @@ nav {
 
 .sidebar-item {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.12s;
 }
 .sidebar-item:hover { background: var(--bg-hover); }
 .sidebar-item.active {
     background: var(--bg-active);
-    border-left: 3px solid var(--accent);
-    padding-left: 13px;
+    box-shadow: inset 3px 0 0 var(--accent); /* 左侧绿色指示条，不用边框 */
 }
 
 .item-id {
@@ -329,27 +305,27 @@ nav {
 
 .item-title .status-tag { flex: 0 0 auto; }
 
-/* ====================== 分页 ====================== */
+/* ====================== 分页 / 侧栏页脚 ====================== */
+/* 灰色条带，与白色列表区分 */
 .paginator {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
-    border-top: 1px solid var(--border);
-    background: var(--bg-surface);
+    background: var(--bg-subtle);
 }
 .paginator button {
     padding: 6px 14px;
-    border: 1px solid var(--border-strong);
+    border: none;
     background: var(--bg-surface);
     color: var(--text-primary);
     border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
-    transition: background 0.12s, border-color 0.12s;
+    transition: background 0.12s;
 }
-.paginator button:hover:not(:disabled) { background: var(--bg-hover); border-color: var(--accent); }
+.paginator button:hover:not(:disabled) { background: var(--bg-hover); }
 .paginator button:disabled { opacity: 0.4; cursor: not-allowed; }
 .paginator span {
     font-size: 13px;
@@ -363,8 +339,7 @@ nav {
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
-    border-top: 1px solid var(--border);
-    background: var(--bg-surface);
+    background: var(--bg-subtle);
     font-size: 11px;
     color: var(--icon-muted);
 }
@@ -372,7 +347,7 @@ nav {
     height: 14px;
     width: 45.5px; /* 78:24 比例 */
     opacity: 0.85;
-    background-color: var(--icon-muted); /* 跟随主题：深色更亮、浅色更暗 */
+    background-color: var(--icon-muted); /* 跟随主题动态匹配 */
     -webkit-mask: url(assets/github-text.svg) no-repeat center / contain;
     mask: url(assets/github-text.svg) no-repeat center / contain;
 }
@@ -396,7 +371,7 @@ nav {
     font-weight: 500;
     color: var(--text-primary);
     background: var(--bg-surface);
-    border: 1px solid var(--border-strong);
+    border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
 }
@@ -429,15 +404,14 @@ nav {
     max-width: 920px;
     margin: 20px auto;
     background: var(--bg-surface);
-    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
     overflow: hidden;
 }
 
+/* 头部用次级色块与正文区分，不画分隔线 */
 .detail-header {
     padding: 24px 28px;
-    border-bottom: 1px solid var(--border);
+    background: var(--bg-subtle);
 }
 
 .detail-id {
@@ -456,9 +430,7 @@ nav {
 
 .detail-section {
     padding: 22px 28px;
-    border-bottom: 1px solid var(--border);
 }
-.detail-section:last-child { border-bottom: none; }
 
 .section-title {
     font-size: 15px;
@@ -474,7 +446,7 @@ nav {
     width: 4px;
     height: 16px;
     border-radius: 2px;
-    background: linear-gradient(180deg, var(--accent), #8b5cf6);
+    background: var(--accent); /* 纯色品牌绿，不用渐变 */
 }
 
 .info-grid {
@@ -508,7 +480,7 @@ nav {
     align-items: center;
     gap: 5px;
     padding: 3px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     font-size: 12px;
     font-weight: 600;
     line-height: 1.6;
@@ -525,9 +497,9 @@ nav {
 .status-未修复 { background: rgba(207, 34, 46, 0.12); color: var(--status-red); }
 .status-待确认 { background: rgba(154, 103, 0, 0.14); color: var(--status-yellow); }
 .status-不予修复 { background: rgba(110, 119, 129, 0.14); color: var(--status-gray); }
-.status-无法修复 { background: rgba(230, 126, 34, 0.14); color: var(--status-orange); }
-.status-特意设计为之 { background: rgba(123, 31, 162, 0.14); color: var(--status-purple); }
-.status-重复 { background: rgba(87, 96, 106, 0.14); color: var(--status-gray); }
+.status-无法修复 { background: rgba(188, 76, 0, 0.12); color: var(--status-orange); }
+.status-特意设计为之 { background: rgba(87, 96, 106, 0.16); color: var(--status-slate); }
+.status-重复 { background: rgba(110, 119, 129, 0.14); color: var(--status-gray); }
 
 /* ====================== 描述与 Markdown ====================== */
 .detail-desc {
@@ -555,17 +527,16 @@ nav {
 .markdown-body ol { margin: 0 0 12px; padding-left: 24px; }
 .markdown-body li { margin: 4px 0; }
 .markdown-body code {
-    background: var(--bg-app);
+    background: var(--bg-subtle);
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 13px;
 }
 .markdown-body pre {
-    background: var(--bg-app);
+    background: var(--bg-subtle);
     padding: 16px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     overflow-x: auto;
     margin: 0 0 12px;
 }
@@ -574,11 +545,11 @@ nav {
 .markdown-body a { color: var(--accent); text-decoration: none; }
 .markdown-body a:hover { text-decoration: underline; }
 .markdown-body blockquote {
-    border-left: 3px solid var(--border-strong);
     padding: 4px 16px;
     color: var(--text-secondary);
     margin: 0 0 12px;
     background: var(--bg-subtle);
+    box-shadow: inset 3px 0 0 var(--border); /* 左侧引用条，不用边框 */
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 .markdown-body table {
@@ -596,11 +567,10 @@ nav {
 
 /* ====================== 评论 ====================== */
 .comment-item {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     margin-bottom: 14px;
     overflow: hidden;
-    background: var(--bg-surface);
+    background: var(--bg-subtle);
 }
 .comment-item:last-child { margin-bottom: 0; }
 
@@ -609,8 +579,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 9px 16px;
-    background: var(--bg-subtle);
-    border-bottom: 1px solid var(--border);
+    background: var(--bg-hover);
     font-size: 13px;
     gap: 8px;
 }
@@ -620,16 +589,16 @@ nav {
 
 /* ====================== 骨架屏 ====================== */
 .skeleton {
-    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-subtle) 37%, var(--bg-hover) 63%);
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-active) 37%, var(--bg-hover) 63%);
     background-size: 400% 100%;
     animation: skeleton-shine 1.4s ease infinite;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
 }
 @keyframes skeleton-shine {
     0% { background-position: 100% 50%; }
     100% { background-position: 0 50%; }
 }
-.skeleton-item { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.skeleton-item { padding: 12px 16px; }
 .skeleton-line { height: 12px; margin-bottom: 8px; }
 .skeleton-line.short { width: 40%; }
 .skeleton-line.medium { width: 70%; }
@@ -653,12 +622,13 @@ nav {
 .content::-webkit-scrollbar { width: 10px; height: 10px; }
 .sidebar-list::-webkit-scrollbar-thumb,
 .content::-webkit-scrollbar-thumb {
-    background: var(--border-strong);
+    background: var(--border);
+    background-clip: padding-box;
+    border: 3px solid transparent;
     border-radius: 999px;
-    border: 3px solid var(--bg-surface);
 }
 .sidebar-list::-webkit-scrollbar-thumb:hover,
-.content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.content::-webkit-scrollbar-thumb:hover { background-color: var(--text-muted); }
 
 /* ====================== 移动端遮罩 ====================== */
 .scrim {
@@ -682,6 +652,7 @@ nav {
 @media (max-width: 768px) {
     nav { padding: 0 14px; }
     .nav-sub { display: none; }
+    .brand-logo { height: 20px; }
 
     .menu-toggle { display: flex; }
 
@@ -695,7 +666,6 @@ nav {
         width: 86%;
         max-width: 340px;
         min-width: 0;
-        border-right: 1px solid var(--border);
         box-shadow: var(--shadow-drawer);
         transform: translateX(-100%);
         transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -707,7 +677,7 @@ nav {
 
     .back-btn { display: inline-flex; }
 
-    .detail-card { margin: 14px; border-radius: var(--radius-md); }
+    .detail-card { margin: 14px; }
     .detail-header,
     .detail-section { padding: 18px 18px; }
     .detail-title { font-size: 19px; }

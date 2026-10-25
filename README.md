@@ -1,4 +1,8 @@
-# 无尽像素服务器 Bug 追踪器
+<p align="center">
+  <img src="assets/logo.png" alt="EndlessPixel" width="360">
+</p>
+
+<h1 align="center">无尽像素服务器 Bug 追踪器</h1>
 
 > 一个轻量、美观、全端自适应的公开漏洞看板，由 GitHub Issues 驱动，无需后端服务器。
 
